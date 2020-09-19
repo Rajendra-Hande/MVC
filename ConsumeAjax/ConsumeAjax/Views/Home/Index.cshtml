@@ -1,0 +1,101 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <script src="~/Scripts/jquery-3.5.1.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btn1").click(function () {
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    url: "http://localhost:51200/api/employee/",
+                    success: function (data) {
+                        var table = $("<table>").append("<tr><td>EmpId</td><td>EmpName</td><td>Gender</td><td>Salary</td></tr>");
+                        $.each(data, function (key, value) {
+                            table.append("<tr><td>" + value.EmpId + "</td><td>" + value.EmpName + "</td><td>" + value.Gender + "</td><td>" + value.Salary + "</td></tr>");
+                           },
+                        $("#msg").html(table));
+                    }
+                });
+            });
+            $("#btn2").click(function () {
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    url: "http://localhost:51200/api/employee/" + $("#EmpId").val(),
+                    success: function (data) {
+                        var table = $("<table>").append("<tr><td>EmpId</td><td>EmpName</td><td>Gender</td><td>Salary</td></tr>");
+                        table.append("<tr><td>" + data.EmpId + "</td><td>" + data.EmpName + "</td><td>" + data.Gender + "</td><td>" + data.Salary + "</td></tr>");
+                        $("#msg").html(table);
+                    }
+                });
+            });
+            $("#btn3").click(function () {
+                $.ajax({
+                    type: 'post',
+                    contentType: 'application/json;charSet=Udf-8',
+                    url: "http://localhost:51200/api/employee",
+                    data:JSON.stringify({
+                        EmpName: $("#EmpName").val(),
+                        Gender: $("input[name='gender']:checked").val(),
+                        Salary:$("#salary").val()
+                    }),
+                    success: function () {
+                        alert("Record Saved");
+                    }
+                });
+            });
+            $("#btn4").click(function () {
+                $.ajax({
+                    type: 'put',
+                    contentType: 'application/json;charSet=Udf-8',
+                    url: "http://localhost:51200/api/employee/"+ $("#EmpId").val(),
+                    data: JSON.stringify({
+                        EmpName: $("#EmpName").val(),
+                        Gender: $("input[name='gender']:checked").val(),
+                        Salary: $("#salary").val()
+                    }),
+                    success: function () {
+                        alert("Record updated");
+                    }
+                });
+            });
+            $("#btn5").click(function () {
+                $.ajax({
+                    type: 'Delete',
+                    contentType: 'application/json;charSet=Udf-8',
+                    url: "http://localhost:51200/api/employee/" + $("#EmpId").val(),
+                    success: function () {
+                        alert("Record deleted");
+                    }
+                });
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+    Employee Id:<input type="text" id="EmpId" />
+    <input type="button" id="btn2" value="GetDataById" class="btn-primary" /> <br /><br />
+    Employee name:<input type="text" id="EmpName" /><br /><br />
+    Gender: <input type="radio" id="male" name="gender" value="Male">Male
+    <input type="radio" id="female" name="gender" value="Female">Female <br /><br />
+    Salary:<input type="text" id="salary" /><br /><br />
+    <input type="button" id="btn1" value="GetData" class="btn-primary" />
+    <input type="button" id="btn3" value="PostData" class="btn-success" />
+    <input type="button" id="btn4" value="UpdateData" class="btn-warning" />
+    <input type="button" id="btn5" value="DeleteData" class="btn-danger" /><br /><br />
+    <div id="msg">
+    </div>
+
+</body>
+</html>
